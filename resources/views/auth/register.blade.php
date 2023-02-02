@@ -39,6 +39,13 @@
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
+        <!-- place -->
+        <div class="mt-4">
+            <x-input-label for="place" :value="__('Place')" />
+            <x-text-input id="place" class="block mt-1 w-full" type="text" name="place" :value="old('place')" required autofocus />
+            <x-input-error :messages="$errors->get('place')" class="mt-2" />
+        </div>
+
         <div class="flex items-center justify-end mt-4">
             <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
                 {{ __('Already registered?') }}
