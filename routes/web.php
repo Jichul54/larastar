@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OfficeController;
+use App\Http\Controllers\CommuteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +16,7 @@ use App\Http\Controllers\OfficeController;
 |
 */
 Route::resource('office', OfficeController::class,['only' => ['index']]);
+Route::resource('commute', CommuteController::class,['only' => ['store']]);
 Route::get('/', function () {
     return view('welcome');
 });

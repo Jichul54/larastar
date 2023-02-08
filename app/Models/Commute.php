@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Commute extends Model
 {
     use HasFactory;
+    protected $guarded = [
+        'id',
+        'created_at',
+        'updated_at',
+    ];
 
-    'id',
-    'user_id',
-    'office_id',
-    'arrival',
-    'departure',
 }

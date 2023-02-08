@@ -17,8 +17,9 @@ return new class extends Migration
             $table->id();
             $table->integer('user_id');
             $table->integer('office_id');
-            $table->timestamp('arrival');
-            $table->timestamp('departure');
+            $table->timestamps();
+            $table->timestamp('arrival')->nullable();
+            $table->timestamp('departure')->nullable();
         });
     }
 
