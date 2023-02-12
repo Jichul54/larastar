@@ -41,9 +41,13 @@
 
         <!-- place -->
         <div class="mt-4">
-            <x-input-label for="place" :value="__('Place')" />
-            <x-text-input id="place" class="block mt-1 w-full" type="text" name="place" :value="old('place')" required autofocus />
-            <x-input-error :messages="$errors->get('place')" class="mt-2" />
+            <select name="office" id="cars">
+                <option value="1">Tokyo</option>
+                <option value="2">Sapporo</option>
+                <option value="3">Fukuoka</option>
+                <option value="4">Sendai</option>
+            </select>
+
         </div>
 
         <div class="flex items-center justify-end mt-4">
