@@ -49,7 +49,7 @@ class CommuteController extends Controller
 
         }
 
-
+        return view('dashboard');
     }
 
     /**
