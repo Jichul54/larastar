@@ -19,7 +19,7 @@ use App\Models\User;
 |
 */
 Route::resource('office', OfficeController::class,['only' => ['index']]);
-Route::resource('commute', CommuteController::class,['only' => ['store']]);
+Route::resource('commute', CommuteController::class,['only' => ['index', 'store']]);
 Route::get('/', function () {
     return view('welcome');
 });

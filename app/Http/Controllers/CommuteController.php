@@ -19,7 +19,7 @@ class CommuteController extends Controller
      */
     public function index()
     {
-        //
+        return view('commute.index');
     }
 
     /**
@@ -45,14 +45,15 @@ class CommuteController extends Controller
         if ($request->arrival == '出社') {
             Commute::Create(['user_id' => Auth::id(), 'office_id' => Auth::user()->office_id, 'arrival' =>$current_date_time]); 
             $user->working = true;
+            $user->save();
         }else{
             Commute::where('user_id', Auth::id())
                     ->where('departure', null)
                     ->update(['departure' => $current_date_time]);
             $user->working = false;
+            $user->save();
         }
-        $working = $user->working;
-        return view('dashboard',["working" => $working]);
+        return view('commute.index');
     }
 
     /**
