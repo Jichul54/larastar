@@ -40,16 +40,19 @@ class CommuteController extends Controller
      */
     public function store(Request $request)
     {
+        $user = Auth::user();
         $current_date_time = \Carbon\Carbon::now()->toDateTimeString();
         if ($request->arrival == '出社') {
             Commute::Create(['user_id' => Auth::id(), 'office_id' => Auth::user()->office_id, 'arrival' =>$current_date_time]); 
-
+            $user->working = true;
         }else{
-            Commute::Create(['user_id' => Auth::id(), 'office_id' => Auth::user()->office_id, 'departure' =>$current_date_time]); 
-
+            Commute::where('user_id', Auth::id())
+                    ->where('departure', null)
+                    ->update(['departure' => $current_date_time]);
+            $user->working = false;
         }
-
-        return view('dashboard');
+        $working = $user->working;
+        return view('dashboard',["working" => $working]);
     }
 
     /**

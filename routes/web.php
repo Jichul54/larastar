@@ -4,6 +4,9 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OfficeController;
 use App\Http\Controllers\CommuteController;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -22,8 +25,10 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $working = Auth::user()->working;
+    return view('dashboard',["working" => $working]);
 })->middleware(['auth', 'verified'])->name('dashboard');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
