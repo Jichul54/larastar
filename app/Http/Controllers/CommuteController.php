@@ -53,7 +53,9 @@ class CommuteController extends Controller
             $user->working = false;
             $user->save();
         }
-        return view('commute.index');
+
+        $commute = Commute::all();
+        return view('commute.index',['commutes' => $commute]);
     }
 
     /**
