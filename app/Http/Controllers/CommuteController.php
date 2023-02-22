@@ -96,11 +96,32 @@ class CommuteController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $start = strtotime($request->start);
+        $end = strtotime($request->end);
+        
         $user = Auth::user();
         $offices = Office::all();
-        $commute = Commute::all();
+        $commutes = Commute::all();
+
+        if ($start == false && $end == false){
+
+        } elseif($start != false && $end == false){
+            for ($n=0; $n<count($commutes); $n++){
+                $arrival = strtotime($commutes[$n]->arrival);
+                if ($arrival < $start){
+                    unset($commutes[$n]);
+                }
+            }
+        } elseif($start == false && $end != false){
+            for ($n=0; $n<count($commutes); $n++){
+                $departure = strtotime($commutes[$n]->departure);
+                if ($end < $departure){
+                    unset($commutes[$n]);
+                }
+            }            
+        }
         return view('commute.index',[
-            'commutes' => $commute,
+            'commutes' => $commutes,
             "offices" => $offices,
             "user" => $user,
             "office_id" => $request->office_id
