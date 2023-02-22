@@ -41,11 +41,10 @@
 
         <!-- place -->
         <div class="mt-4">
-            <select name="office" id="cars">
-                <option value="1">Tokyo</option>
-                <option value="2">Sapporo</option>
-                <option value="3">Fukuoka</option>
-                <option value="4">Sendai</option>
+            <select name="office" id="offices">
+                @foreach($offices as $office)
+                <option value="{{ $office->id }}">{!! $office->location !!}</option>
+                @endforeach
             </select>
 
         </div>

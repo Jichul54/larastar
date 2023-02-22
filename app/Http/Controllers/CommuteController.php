@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Validator;
 use App\Models\User;
 use App\Models\Commute;
+use App\Models\Office;
 use Carbon\Carbon; 
 
 
@@ -41,9 +42,10 @@ class CommuteController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
+        $offices = Office::all();
         $current_date_time = \Carbon\Carbon::now()->toDateTimeString();
         if ($request->arrival == '出社') {
-            Commute::Create(['user_id' => Auth::id(), 'office_id' => Auth::user()->office_id, 'arrival' =>$current_date_time]); 
+            Commute::Create(['user_id' => Auth::id(), 'office_id' => $request->office_id, 'arrival' =>$current_date_time]); 
             $user->working = true;
             $user->save();
         }else{
@@ -55,7 +57,12 @@ class CommuteController extends Controller
         }
 
         $commute = Commute::all();
-        return view('commute.index',['commutes' => $commute]);
+        return view('commute.index',[
+            'commutes' => $commute,
+            "offices" => $offices,
+            "user" => $user,
+            "office_id" => $request->office_id
+        ]);
     }
 
     /**
@@ -89,7 +96,15 @@ class CommuteController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $user = Auth::user();
+        $offices = Office::all();
+        $commute = Commute::all();
+        return view('commute.index',[
+            'commutes' => $commute,
+            "offices" => $offices,
+            "user" => $user,
+            "office_id" => $request->office_id
+        ]);
     }
 
     /**

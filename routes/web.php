@@ -6,6 +6,7 @@ use App\Http\Controllers\OfficeController;
 use App\Http\Controllers\CommuteController;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Office;
 
 
 /*
@@ -19,14 +20,18 @@ use App\Models\User;
 |
 */
 Route::resource('office', OfficeController::class,['only' => ['index']]);
-Route::resource('commute', CommuteController::class,['only' => ['index', 'store']]);
+Route::resource('commute', CommuteController::class,['only' => ['index', 'store', 'update']]);
 Route::get('/', function () {
     return view('welcome');
 });
 
 Route::get('/dashboard', function () {
-    $working = Auth::user()->working;
-    return view('dashboard',["working" => $working]);
+    $user = Auth::user();
+    $offices = Office::all();
+    return view('dashboard',[
+        "user" => $user,
+        "offices" => $offices
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 

@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Commute;
+use App\Models\Office;
 
 class User extends Authenticatable
 {
@@ -45,9 +46,13 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function Commutes()
+    public function commutes()
     {
         return $this->hasMany(Commute::class);
     }
 
+    public function office()
+    {
+        return $this->belongsTo(Office::class);
+    }
 }
