@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Commute;
 use App\Models\Office;
 use Carbon\Carbon; 
+use App\Notifications\Slack;
 
 
 class CommuteController extends Controller
@@ -48,15 +49,24 @@ class CommuteController extends Controller
             Commute::Create(['user_id' => Auth::id(), 'office_id' => $request->office_id, 'arrival' =>$current_date_time]); 
             $user->working = true;
             $user->save();
+
+            $slack = \App\Models\Commute::first();
+            $message = $user->name . "さんが" . $user->office->location . "オフィスに出社しました。";
+            $slack->notify(new Slack($message));
         }else{
             Commute::where('user_id', Auth::id())
                     ->where('departure', null)
                     ->update(['departure' => $current_date_time]);
             $user->working = false;
             $user->save();
+
+            $slack = \App\Models\Commute::first();
+            $message = $user->name . "さんが" . $user->office->location . "オフィスから退社しました。";
+            $slack->notify(new Slack($message));
         }
 
         $commute = Commute::all();
+
         return view('commute.index',[
             'commutes' => $commute,
             "offices" => $offices,
