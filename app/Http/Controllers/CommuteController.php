@@ -23,12 +23,14 @@ class CommuteController extends Controller
     {
         $offices = Office::all();
         $office_id = Auth::user()->office_id;
+        $user_id = Auth::id();
         $commutes = Commute::where('office_id', $office_id)->get();
 
         return view('commute.index',[
             'offices' => $offices,
             'office_id' => $office_id,
-            'commutes' => $commutes
+            'commutes' => $commutes,
+            'user_id' => $user_id
         ]);
     }
 
@@ -100,7 +102,7 @@ class CommuteController extends Controller
         return view('commute.index',[
             'commutes' => $commutes,
             "offices" => $offices,
-            "user" => $user,
+            "user_id" => $user->id,
             "office_id" => $office_id
         ]);
     }
@@ -164,7 +166,7 @@ class CommuteController extends Controller
         return view('commute.index',[
             'commutes' => $commutes,
             "offices" => $offices,
-            "user" => $user,
+            "user_id" => $user->id,
             "office_id" => $request->office_id
         ]);
     }
@@ -177,6 +179,7 @@ class CommuteController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $result = Commute::find($id)->delete();
+        return redirect()->route('commute.index');
     }
 }
