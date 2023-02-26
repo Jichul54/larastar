@@ -31,6 +31,6 @@ class Commute extends Model
     use Notifiable;
     public function routeNotificationForSlack($notification)
     {
-        return 'https://hooks.slack.com/services/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';
+        return 'https://hooks.slack.com/services/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';
     }
 }

@@ -37,7 +37,6 @@
         </thead>
         <tbody>
             @foreach($commutes as $commute)
-            @if($commute->office_id == $office_id)
             <tr>
                 <td>
                     <p class="fw-bold mb-1">{!! $commute->user->name !!}</p>
@@ -52,7 +51,6 @@
                     <p class="fw-bold mb-1">{!! $commute->departure !!}</p>
                 </td>
             </tr>
-            @endif
             @endforeach
         </tbody>
     </table>        
@@ -60,11 +58,7 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
-    config = {
-        enableTime: true,
-        dateFormat: 'Y-m-d H:i:s',
-    }
-    flatpickr("input[type=datetime-local]", config);
+    flatpickr("input[type=datetime-local]");
 </script>
 @endpush
 @endsection

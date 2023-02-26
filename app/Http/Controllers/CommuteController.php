@@ -44,6 +44,7 @@ class CommuteController extends Controller
     {
         $user = Auth::user();
         $offices = Office::all();
+
         $current_date_time = \Carbon\Carbon::now()->toDateTimeString();
         if ($request->arrival == '出社') {
             Commute::Create(['user_id' => Auth::id(), 'office_id' => $request->office_id, 'arrival' =>$current_date_time]); 
@@ -65,10 +66,11 @@ class CommuteController extends Controller
             $slack->notify(new Slack($message));
         }
 
-        $commute = Commute::all();
+        $office = $request->office_id;
+        $commutes = Commute::where('office_id', $office)->get();
 
         return view('commute.index',[
-            'commutes' => $commute,
+            'commutes' => $commutes,
             "offices" => $offices,
             "user" => $user,
             "office_id" => $request->office_id
@@ -106,12 +108,13 @@ class CommuteController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $office = $request->office_id;
         $start = strtotime($request->start);
         $end = strtotime($request->end);
         
         $user = Auth::user();
         $offices = Office::all();
-        $commutes = Commute::all();
+        $commutes = Commute::where('office_id', $office)->get();
 
         if ($start == false && $end == false){
 
