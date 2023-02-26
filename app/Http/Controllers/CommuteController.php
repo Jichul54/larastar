@@ -21,7 +21,15 @@ class CommuteController extends Controller
      */
     public function index()
     {
-        return view('commute.index');
+        $offices = Office::all();
+        $office_id = Auth::user()->office_id;
+        $commutes = Commute::where('office_id', $office_id)->get();
+
+        return view('commute.index',[
+            'offices' => $offices,
+            'office_id' => $office_id,
+            'commutes' => $commutes
+        ]);
     }
 
     /**
@@ -42,8 +50,19 @@ class CommuteController extends Controller
      */
     public function store(Request $request)
     {
+        $office_id = $request->office_id;
+
+        $current_date = \Carbon\Carbon::now()->toDateString();
+        //同じ日にすでに出社ボタンを押したらリロードを防ぐ
+        $commute_current_user = Commute::where('user_id', Auth::id())
+                                        ->where('office_id', $office_id)
+                                        ->whereDate('created_at', $current_date)
+                                        ->get();
+        if (count($commute_current_user) >= 1) return redirect()->route('commute.index');
+
         $user = Auth::user();
         $offices = Office::all();
+        $office = Office::find($office_id);
 
         $current_date_time = \Carbon\Carbon::now()->toDateTimeString();
         if ($request->arrival == '出社') {
@@ -54,6 +73,16 @@ class CommuteController extends Controller
             $slack = \App\Models\Commute::first();
             $message = $user->name . "さんが" . $user->office->location . "オフィスに出社しました。";
             $slack->notify(new Slack($message));
+
+            // 制限人数を超えた場合Slackに警告を送る
+            $office_now = Commute::where('office_id', $office_id)
+                                    ->where('departure', null)
+                                    ->get();
+            if (count($office_now) >= $office->limit){
+                $slack = \App\Models\Commute::first();
+                $message = $office->location."オフィスが制限人数".$office->limit."人に達しました。速やかに退社してください。";
+                $slack->notify(new Slack($message));                
+            }
         }else{
             Commute::where('user_id', Auth::id())
                     ->where('departure', null)
@@ -66,14 +95,13 @@ class CommuteController extends Controller
             $slack->notify(new Slack($message));
         }
 
-        $office = $request->office_id;
-        $commutes = Commute::where('office_id', $office)->get();
+        $commutes = Commute::where('office_id', $office_id)->get();
 
         return view('commute.index',[
             'commutes' => $commutes,
             "offices" => $offices,
             "user" => $user,
-            "office_id" => $request->office_id
+            "office_id" => $office_id
         ]);
     }
 
