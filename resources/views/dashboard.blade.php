@@ -2,9 +2,12 @@
 @section("content")
 @vite(['resources/css/app.css', 'resources/sass/app.scss', 'resources/js/app.js'])
 <div class="px-4 py-5 my-5 text-center bg-white">
-    <h1 class="display-5 fw-bold">Centered hero</h1>
-    <div class="col-lg-6 mx-auto">
-      <p class="lead mb-4">Quickly design and customize responsive mobile-first sites with Bootstrap, the world’s most popular front-end open source toolkit, featuring Sass variables and mixins, responsive grid system, extensive prebuilt components, and powerful JavaScript plugins.</p>
+    @if ($user->working == false)
+        <h1 class="display-5 fw-bold">今日も一日ファイトです！</h1>
+        @else
+        <h1 class="display-5 fw-bold">お疲れさまでした！</h1>
+        @endif
+    <div class="col-lg-6 mx-auto mt-4">
       <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
             <form action="{{ route('commute.store') }}" method="post">
                 @csrf
@@ -22,8 +25,15 @@
                 @else
                 <input type="submit" class="btn btn-primary btn-lg btn-block" name="departure" value="退社">
                 @endif
-            </form>      
+            </form>
         </div>
     </div>
   </div>
 @endsection
+
+
+
+
+
+
+

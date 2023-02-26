@@ -12,10 +12,6 @@ class OfficeController extends Controller
 {
     public function index()
     {
-        $office_id=Auth::user()->office_id;
-        //ddd($office_id);
-        $location=Office::find($office_id)->location;
-        //ddd($location);
         return view('office.index');
     }
 }
