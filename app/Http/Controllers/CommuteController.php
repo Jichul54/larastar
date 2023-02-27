@@ -19,18 +19,37 @@ class CommuteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $office_id = $request->office_id;
+        if (!isset($office_id)) $office_id = Auth::user()->office_id;
+        $start = $request->start;
+        $end = $request->end;
+        
+        $user = Auth::user();
         $offices = Office::all();
-        $office_id = Auth::user()->office_id;
-        $user_id = Auth::id();
-        $commutes = Commute::where('office_id', $office_id)->get();
 
+        if ($start == null && $end == null){
+            $commutes = Commute::where('office_id', $office_id)->paginate(3);
+        } elseif($start != null && $end == null){
+            $commutes = Commute::where('office_id', $office_id)
+                                ->whereDate('arrival', '>=' , $start)
+                                ->paginate(3);
+        } elseif($start == null && $end != null){
+            $commutes = Commute::where('office_id', $office_id)
+                                ->whereDate('departure', '<=' , $end)
+                                ->paginate(3);          
+        } else{
+            $commutes = Commute::where('office_id', $office_id)
+                                ->whereDate('arrival', '>=' , $start)
+                                ->whereDate('departure', '<=' , $end)
+                                ->paginate(3);  
+        }
         return view('commute.index',[
-            'offices' => $offices,
-            'office_id' => $office_id,
             'commutes' => $commutes,
-            'user_id' => $user_id
+            "offices" => $offices,
+            "user_id" => $user->id,
+            "office_id" => $office_id
         ]);
     }
 
@@ -60,7 +79,7 @@ class CommuteController extends Controller
                                         ->where('office_id', $office_id)
                                         ->whereDate('created_at', $current_date)
                                         ->get();
-        if (count($commute_current_user) >= 1) return redirect()->route('commute.index');
+        if (count($commute_current_user) > 1) return redirect()->route('commute.index');
 
         $user = Auth::user();
         $offices = Office::all();
@@ -97,7 +116,7 @@ class CommuteController extends Controller
             $slack->notify(new Slack($message));
         }
 
-        $commutes = Commute::where('office_id', $office_id)->get();
+        $commutes = Commute::where('office_id', $office_id)->paginate(3);
 
         return view('commute.index',[
             'commutes' => $commutes,
@@ -138,37 +157,7 @@ class CommuteController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $office = $request->office_id;
-        $start = strtotime($request->start);
-        $end = strtotime($request->end);
-        
-        $user = Auth::user();
-        $offices = Office::all();
-        $commutes = Commute::where('office_id', $office)->get();
 
-        if ($start == false && $end == false){
-
-        } elseif($start != false && $end == false){
-            for ($n=0; $n<count($commutes); $n++){
-                $arrival = strtotime($commutes[$n]->arrival);
-                if ($arrival < $start){
-                    unset($commutes[$n]);
-                }
-            }
-        } elseif($start == false && $end != false){
-            for ($n=0; $n<count($commutes); $n++){
-                $departure = strtotime($commutes[$n]->departure);
-                if ($end < $departure){
-                    unset($commutes[$n]);
-                }
-            }            
-        }
-        return view('commute.index',[
-            'commutes' => $commutes,
-            "offices" => $offices,
-            "user_id" => $user->id,
-            "office_id" => $request->office_id
-        ]);
     }
 
     /**
@@ -179,7 +168,9 @@ class CommuteController extends Controller
      */
     public function destroy($id)
     {
-        $result = Commute::find($id)->delete();
+        $result = Commute::find($id);
+        if ($result->departure == null) Auth::user()->update(['working' => false]);
+        $result->delete();
         return redirect()->route('commute.index');
     }
 }

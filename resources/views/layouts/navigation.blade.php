@@ -16,7 +16,7 @@
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('commute.index')" :active="request()->routeIs('commute.index')">
+                    <x-nav-link :href="route('commute.index',['office_id' => '', 'start' => '', 'end' => ''])" :active="request()->routeIs('commute.index')">
                         {{ __('出社表') }}
                     </x-nav-link>
                 </div>
