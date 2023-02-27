@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Office;
+use Illuminate\Notifications\Notifiable;
+
 
 class Commute extends Model
 {
@@ -24,5 +26,11 @@ class Commute extends Model
     public function office()
     {
         return $this->belongsTo(Office::class);
-    }    
+    }  
+
+    use Notifiable;
+    public function routeNotificationForSlack($notification)
+    {
+        return 'https://hooks.slack.com/services/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';
+    }
 }

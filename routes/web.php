@@ -20,7 +20,7 @@ use App\Models\Office;
 |
 */
 Route::resource('office', OfficeController::class,['only' => ['index']]);
-Route::resource('commute', CommuteController::class,['only' => ['index', 'store', 'update']]);
+Route::resource('commute', CommuteController::class,['only' => ['index', 'store', 'update', 'destroy']]);
 Route::get('/', function () {
     return view('welcome');
 });

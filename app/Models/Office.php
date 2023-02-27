@@ -14,6 +14,7 @@ class Office extends Model
     protected $fillable = [
         'id',
         'location',
+        'limit'
     ];
 
     public function users()
