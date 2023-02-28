@@ -22,9 +22,9 @@
                         @endforeach
                     </select>
                     @if ($user->working == false)
-                    <input type="submit" class="btn btn-primary btn-lg btn-block" name="arrival" value="出社">
+                    <input type="submit" class="btn btn-outline-success btn-lg btn-block" name="arrival" value="出社">
                     @else
-                    <input type="submit" class="btn btn-primary btn-lg btn-block" name="departure" value="退社">
+                    <input type="submit" class="btn btn-outline-success btn-lg btn-block" name="departure" value="退社">
                     @endif
                 </form>
             </div>

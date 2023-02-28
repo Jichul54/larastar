@@ -19,11 +19,6 @@
                         {{ __('出社表') }}
                     </x-nav-link>
                 </div>
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('office.index')" :active="request()->routeIs('office.index')">
-                        {{ __('Office Now') }}
-                    </x-nav-link>
-                </div>
             </div>
 
             <!-- Settings Dropdown -->

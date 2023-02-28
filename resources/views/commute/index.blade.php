@@ -22,7 +22,7 @@
                 <input type="datetime-local" class="form-control" name="end" placeholder="指定日終了（任意）">
             </div>
             <div class="col-md-4">
-                <button type="submit" class="btn btn-primary btn-lg btn-block">適用</button>
+                <button type="submit" class="btn btn-outline-success btn-lg btn-block">適用</button>
             </div>
         </div>
     </form>
